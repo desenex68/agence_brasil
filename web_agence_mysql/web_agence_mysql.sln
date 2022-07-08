@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32413.511
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "web_agence_mysql", "web_agence_mysql\web_agence_mysql.csproj", "{A8AC4188-ECDE-4901-B4A8-0F8C1E4BA9CB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A8AC4188-ECDE-4901-B4A8-0F8C1E4BA9CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8AC4188-ECDE-4901-B4A8-0F8C1E4BA9CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8AC4188-ECDE-4901-B4A8-0F8C1E4BA9CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8AC4188-ECDE-4901-B4A8-0F8C1E4BA9CB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FF3E81DD-1B46-43F9-9DBC-13120DC85B8A}
+	EndGlobalSection
+EndGlobal

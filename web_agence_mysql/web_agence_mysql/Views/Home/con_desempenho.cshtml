@@ -1,0 +1,442 @@
+﻿@{
+    ViewBag.Title = "con_desempenho";
+}
+
+<img src="~/Images/logo_agence.jpg" />
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="~/Content/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script src="~/Scripts/canvasjs.min.js"></script>
+
+    <style type="text/css">
+        .boxes {
+            border: 1px solid #000000; /*#f2f1f1*/
+            padding-top: 5px;
+            padding-left: 5px;
+            padding-bottom: 5px;
+            height: 159px; /*58px*/
+            width: 355px;
+            overflow-y: scroll;
+        }
+
+        input, checkbox {
+            vertical-align: text-bottom;
+            display: inline-block;
+        }
+
+        .middle {
+            background-color: #efefef; /*#fef9f9;*/
+            height: 200px;
+            /*border-style: solid;*/
+            border: 1px solid #000000;
+            /*box-sizing: border-box;*/
+        }
+
+
+        table {
+            border-collapse: collapse;
+        }
+
+            table th {
+                border: 1px solid black;
+            }
+
+            table td {
+                border: 1px solid black;
+            }
+
+        thead {
+            background-color: #286090;
+            font-weight: bold;
+            color: white;
+        }
+
+        .pie {
+            position: absolute;
+            top: 350px;
+            left: 580px;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+
+        $.noConflict();
+        jQuery(document).ready(function ($) {
+
+            //Controla la carga de los codigos de consultores
+            var co_usuarios_sel;
+            var data_points = [];
+
+            $("input[name='chk_consultores']").change(function (e) {
+                //alert('tildar');
+                co_usuarios_sel = get_selected_cod();
+            });
+
+            function get_selected_cod() {
+                var sel_cod = '';
+                $("input[name='chk_consultores']:checked").each(function () {
+                    sel_cod += $(this).val() + ",";
+                });
+
+                if (sel_cod != "") {
+                    var longitud = sel_cod.length;
+                    sel_cod = sel_cod.substring(0, (longitud - 1));
+                }
+
+                return sel_cod;
+            }
+
+            $('#cargar_relatorio').on('click', function () {
+
+                $('#pizza').hide();
+
+                var contador = 0;
+                $("input[name='chk_consultores']:checked").each(function () {
+                    contador++;
+                });
+
+                if (contador == 0) {
+                    alert('Selecione pelo menos um consultor para o relatório');
+                    return false;
+                }
+
+                var anio_mes_desde = $('#anio_desde').val() + $('#mes_desde').val();
+                var anio_mes_hasta = $('#anio_hasta').val() + $('#mes_hasta').val();
+
+                if (anio_mes_desde > anio_mes_hasta) {
+                    alert('Erro no mês e ano de - para selecionado, verifique..');
+                    return false;
+                }
+
+                $.ajax({
+                    url: '/Home/Cargar_Relatorio',
+                    type: "POST",
+                    datatype: "json",
+                    data: { mes_desde: $('#mes_desde').val(), anio_desde: $('#anio_desde').val(), mes_hasta: $('#mes_hasta').val(), anio_hasta: $('#anio_hasta').val(), split_co_usuarios: co_usuarios_sel },
+                    success: function (data) {
+                        if (data.confirmacion == true) {
+
+                            var co_usuario;
+                            var lista_relatorio = data.lista_relatorio;
+                            $('table').empty();
+
+                            $("input[name='chk_consultores']:checked").each(function () {
+                                co_usuario = $(this).val();
+
+                                var no_usuario = '';
+                                var total_receita_liquida = 0;
+                                var total_custo_fixo = 0;
+                                var total_comissao = 0;
+                                var total_lucro = 0
+                                $.each(lista_relatorio, function (index, item) {
+                                    if (co_usuario == item.co_usuario) {
+                                        no_usuario = item.no_usuario
+                                        total_receita_liquida = item.total_receita_liquida;
+                                        total_custo_fixo = item.total_custo_fixo;
+                                        total_comissao = item.total_comissao;
+                                        total_lucro = item.total_lucro;
+                                    }
+                                });
+
+                                var head = $("<thead>");
+                                head.append('<tr>');
+                                head.append('<th colspan="5" style="text-align: left;">' + no_usuario + '</th>');
+                                head.append('</tr>');
+                                head.append('<tr>');
+                                head.append('<th style="text-align: center;">Período</th>');
+                                head.append('<th style="text-align: center;">Receita Líquida</th>');
+                                head.append('<th style="text-align: center;">Custo Fixo</th>');
+                                head.append('<th style="text-align: center;">Comissão</th>');
+                                head.append('<th style="text-align: center;">Lucro</th>');
+                                head.append('</tr>');
+                                head.append('</thead>')
+                                $('table').append(head);
+
+                                $.each(lista_relatorio, function (index, item) {
+                                    if (co_usuario == item.co_usuario) {
+                                        var row = $("<tr>");
+                                        row.append('<td style="text-align: left; font-weight:bold;"><a>' + item.periodo + '</a></td>');
+                                        row.append('<td style="text-align: right; font-weight:bold"><a>' + item.receita_liquida.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</a></td>');
+                                        row.append('<td style="text-align: right; font-weight:bold;"><a>' + item.custo_fixo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</a></td>');
+                                        row.append('<td style="text-align: right; font-weight:bold;"><a>' + item.comissao.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</a></td>');
+                                        row.append('<td style="text-align: right; font-weight:bold;"><a>' + item.lucro.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</a></td>');
+                                        row.append('</tr>');
+                                        $('table').append(row);
+                                    }
+                                });
+
+                                var row = $("<tr>");
+                                row.append('<td style="text-align: right; font-weight:bold; color:black;">' + "SALDO" + '</td>');
+                                row.append('<td style="text-align: right; font-weight:bold; color:black;">' + total_receita_liquida.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>');
+                                row.append('<td style="text-align: right; font-weight:bold; color:black;">' + total_custo_fixo.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>');
+                                row.append('<td style="text-align: right; font-weight:bold; color:black;">' + total_comissao.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>');
+                                row.append('<td style="text-align: right; font-weight:bold; color:black;">' + total_lucro.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + '</td>');
+                                row.append('</tr>');
+                                $('table').append(row);
+
+                                var row = $("<tr>");
+                                row.append('<td colspan="5" style="text-align: left;">&nbsp;</td>');
+                                row.append('</tr>');
+                                $('table').append(row);
+                            });
+
+
+                            data_points.length = 0;
+                            var lista_pie = data.lista_pie;
+                            $.each(lista_pie, function (index, item) {
+                                data_points.push({ y: item.cantidad, label: item.descripcion });
+                            });
+
+
+                        }
+                    },
+                });
+
+
+                //    $('table').empty();
+
+                //    for (var k = 1; k < 4 + 1; k++) {
+
+                //        var head = $("<thead>");
+                //        head.append('<tr>');
+                //        head.append('<th colspan="5" style="text-align: left;">Ana Paula Fontes Martins Chiodaro</th>');
+                //        head.append('</tr>');
+                //        head.append('<tr>');
+                //        head.append('<th style="text-align: center;">Período</th>');
+                //        head.append('<th style="text-align: center;">Receita Líquida</th>');
+                //        head.append('<th style="text-align: center;">Custo Fixo</th>');
+                //        head.append('<th style="text-align: center;">Comissão</th>');
+                //        head.append('<th style="text-align: center;">Lucro</th>');
+                //        head.append('</tr>');
+                //        head.append('</thead>')
+                //        $('table').append(head);
+
+                //        for (var j = 1; j < 5 + 1; j++) {
+                //            /* Create new row */
+                //            var row = $("<tr>");
+
+                //            for (var i = 1; i < 5 + 1; i++) {
+                //                /* Append td cell to current row */
+                //                //row.append('<td style="text-align: right;"><a data-index=' + 1 + '>' + 'Contenido' + '</a></td>');
+                //                row.append('<td style="text-align: right;"><a>' + 'Contenido' + '</a></td>');
+                //            }
+
+                //            row.append('</tr>');
+                //            /* Add newly created row to table */
+                //            $('table').append(row);
+                //        }
+
+
+                //        var row = $("<tr>");
+                //        row.append('<td style="text-align: right;">SALDO</td>');
+                //        row.append('<td style="text-align: right;">0</td>');
+                //        row.append('<td style="text-align: right;">0</td>');
+                //        row.append('<td style="text-align: right;">0</td>');
+                //        row.append('<td style="text-align: right;">0</td>');
+                //        row.append('</tr>');
+                //        $('table').append(row);
+
+                //        var row = $("<tr>");
+                //        row.append('<td colspan="5" style="text-align: left;">&nbsp;</td>');
+                //        row.append('</tr>');
+                //        $('table').append(row);
+
+                //        //var foot = $("<tfoot>");
+                //        //foot.append('<tr>');
+                //        //foot.append('<th style="text-align: right;">SALDO</th>');
+                //        //foot.append('<th style="text-align: right;">0</th>');
+                //        //foot.append('<th style="text-align: right;">0</th>');
+                //        //foot.append('<th style="text-align: right;">0</th>');
+                //        //foot.append('<th style="text-align: right;">0</th>');
+                //        //foot.append('</tr>');
+                //        //foot.append('<tr>');
+                //        //foot.append('<th colspan="5" style="text-align: left;">&nbsp;</th>');
+                //        //foot.append('</tr>');
+                //        //foot.append('</tfoot>')
+                //        //$('table').append(foot);
+                //    }
+            });
+
+            $('#novo_relatorio').on('click', function () {
+
+                $('#mes_desde').val("1");
+                $('#anio_desde').val("2003");
+                $('#mes_hasta').val("1");
+                $('#anio_hasta').val("2003");
+
+                $('.tf').prop('checked', false);
+                $('body, html, #opciones_consultores').scrollTop(0);
+
+                $('table').empty();
+                data_points.length = 0;
+                $('#pizza').hide();
+            });
+
+            $('#cargar_grafico_pie').on('click', function () {
+                $('table').empty();
+
+                var chart;
+                chart = new CanvasJS.Chart("chartContainer1",
+                {
+                    culture: "es",
+                    theme: "light2",
+                    //theme: "theme3",
+                    colorSet: "greenShades",
+                    title: {
+                        text: "Participacao na Recita Liquida Saldo",
+                        padding: 5,
+                        fontSize: 20
+                    },
+                    legend: {
+                        horizontalAlign: "center",
+                        verticalAlign: "bottom",
+                        fontSize: 14,
+                    },
+                    exportFileName: "Participacao na Recita Liquida Saldo",
+                    exportEnabled: true,
+                    animationEnabled: true,
+                    data: [
+                        {
+                            type: "pie",
+                            startAngle: 25,
+                            showInLegend: true,
+                            //toolTipContent: "{y} - #percent %",
+                            toolTipContent: "<b>{label}</b>: {y} - #percent %",
+                            yValueFormatString: "#,##0",
+                            //legendText: "{indexLabel} {y} - #percent %",
+                            legendText: "{label}: {indexLabel} {y} - #percent %",
+                            indexLabelFontSize: 14,
+                            click: function (e) {
+                            },
+                            dataPoints: data_points,
+                        }
+                    ]
+                });
+                chart.render();
+
+                $('#pizza').show();
+            });
+
+            $('#cargar_grafico_barras').on('click', function () {
+                $('table').empty();
+
+                var chart = new CanvasJS.Chart("chartContainer1", {
+                    animationEnabled: true,
+                    theme: "light2",
+                    title: {
+                        text: "Perfomance Recita Liquida Saldo"
+                    },
+                    data: [{
+                        type: "column",
+                        dataPoints: data_points,
+                    }]
+                });
+                chart.render();
+
+                $('#pizza').show();
+            });
+
+
+        });
+
+    </script>
+
+</head>
+<body>
+    <div class="form-group row">
+        <div class="middle col-md-4 col-sm-4 col-xs-4">
+            <div>
+                <label style="margin-left: 8px; margin-top: 8px;">Período:</label>
+            </div>
+            <div>
+                <label style="margin-left: 8px;" for="mes_desde">Mês de:</label>
+                <select id="mes_desde" name="mes_desde" style="margin-bottom: 5px; margin-top: 27px; margin-left: 12px; width: 60px" name="mes_desde" id="mes_desde">
+                    <option value="1">Jan</option>
+                    <option value="2">Fev</option>
+                    <option value="3">Mar</option>
+                    <option value="4">Abr</option>
+                    <option value="5">Mai</option>
+                    <option value="6">Jun</option>
+                    <option value="7">Jul</option>
+                    <option value="8">Ago</option>
+                    <option value="9">Set</option>
+                    <option value="10">Out</option>
+                    <option value="11">Nov</option>
+                    <option value="12">Dez</option>
+                </select>
+                <label style="margin-left: 8px;" for="anio_desde">Ano de:</label>
+                <select id="anio_desde" name="anio_desde" style="margin-bottom: 5px; margin-top: 27px; margin-left: 12px; width: 60px" name="anio_desde" id="anio_desde">
+                    <option value="2003">2003</option>
+                    <option value="2004">2004</option>
+                    <option value="2005">2005</option>
+                    <option value="2006">2006</option>
+                    <option value="2007">2007</option>
+                </select>
+            </div>
+            <div>
+                <label style="margin-left: 8px;" for="mes_hasta">Mês até:</label>
+                <select id="mes_hasta" name="mes_hasta" style="margin-bottom: 5px; margin-top: 7px; margin-left:8px; width: 60px" name="mes_hasta" id="mes_hasta">
+                    <option value="1">Jan</option>
+                    <option value="2">Fev</option>
+                    <option value="3">Mar</option>
+                    <option value="4">Abr</option>
+                    <option value="5">Mai</option>
+                    <option value="6">Jun</option>
+                    <option value="7">Jul</option>
+                    <option value="8">Ago</option>
+                    <option value="9">Set</option>
+                    <option value="10">Out</option>
+                    <option value="11">Nov</option>
+                    <option value="12">Dez</option>
+                </select>
+                <label style="margin-left: 8px;" for="anio_hasta">Ano até:</label>
+                <select id="anio_hasta" name="anio_hasta" style="margin-bottom: 5px; margin-top: 27px; margin-left: 8px; width: 60px" name="anio_hasta" id="anio_hasta">
+                    <option value="2003">2003</option>
+                    <option value="2004">2004</option>
+                    <option value="2005">2005</option>
+                    <option value="2006">2006</option>
+                    <option value="2007">2007</option>
+                </select>
+            </div>
+        </div>
+        <div class="middle col-md-4 col-sm-4 col-xs-4">
+            <div>
+                <label style="margin-top: 5px;">Consultores:</label>
+            </div>
+            <div>
+                <div id="opciones_consultores" class="boxes" tabindex="1">
+                    @foreach (var cb in ViewBag.consultores as List<web_agence_mysql.Models.consultores>)
+                    {
+                        <label style="cursor: pointer"><input id="chk_consultores" name="chk_consultores" class="tf" type="checkbox" checked="@cb.ac_seleccion" value="@cb.co_usuario" style="cursor: pointer"> @cb.no_usuario</label><br />
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="middle col-md-4 col-sm-4 col-xs-4">
+            <a class="popup btn btn-primary btn-sm" title="Relatorio" id="cargar_relatorio" tabindex="2" style="margin-bottom: 5px; margin-top: 25px; margin-left: 120px; width: 135px"><span class="fa fa-file-text-o"></span>  Relatório</a><br />
+            <a class="popup btn btn-primary btn-sm" title="Grafico de Barras" id="cargar_grafico_barras" tabindex="3" style="margin-bottom: 5px; margin-left: 120px; margin-top: 5px; width: 135px "><span class="fa fa-bar-chart"></span>  Grafico de Barras</a><br />
+            <a class="popup btn btn-primary btn-sm" title="Grafico de Pie" id="cargar_grafico_pie" tabindex="4" style="margin-bottom: 5px; margin-left: 120px; margin-top: 5px; width: 135px "><span class="fa fa-pie-chart"></span>  Gráfico de Pizza</a><br />
+            <a class="popup btn btn-primary btn-sm" title="Novo Relatório" id="novo_relatorio" tabindex="5" style="margin-bottom: 5px; margin-left: 120px; margin-top: 5px; width: 135px "><span class="fa fa-file-o"></span>  Novo Relatório</a><br />
+        </div>
+    </div>
+    <br />
+    <div class="form-group row">
+        <div class="container">
+            <table class="table table-striped table-bordered"></table>
+        </div>
+    </div>
+
+    <div id="pizza" style="display: none" class="container">
+        <div class="pie" id="chartContainer1" style="width: 520px; height: 470px;float:left; border:1px solid #DDDDDD"></div>
+    </div>
+
+</body>
+</html>
+

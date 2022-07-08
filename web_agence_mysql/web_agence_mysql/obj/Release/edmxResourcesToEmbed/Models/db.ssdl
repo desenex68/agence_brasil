@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="agencedbModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="8.0" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="cao_fatura">
+    <Key>
+      <PropertyRef Name="co_fatura" />
+    </Key>
+    <Property Name="co_fatura" Type="uint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="co_cliente" Type="int" Nullable="false" />
+    <Property Name="co_sistema" Type="int" Nullable="false" />
+    <Property Name="co_os" Type="int" Nullable="false" />
+    <Property Name="num_nf" Type="int" Nullable="false" />
+    <Property Name="total" Type="float" Nullable="false" />
+    <Property Name="valor" Type="float" Nullable="false" />
+    <Property Name="data_emissao" Type="date" Nullable="false" />
+    <Property Name="corpo_nf" Type="text" Nullable="false" />
+    <Property Name="comissao_cn" Type="float" Nullable="false" />
+    <Property Name="total_imp_inc" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="cao_os">
+    <Key>
+      <PropertyRef Name="co_os" />
+    </Key>
+    <Property Name="co_os" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="nu_os" Type="int" />
+    <Property Name="co_sistema" Type="int" />
+    <Property Name="co_usuario" Type="varchar" MaxLength="50" />
+    <Property Name="co_arquitetura" Type="int" />
+    <Property Name="ds_os" Type="varchar" MaxLength="200" />
+    <Property Name="ds_caracteristica" Type="varchar" MaxLength="200" />
+    <Property Name="ds_requisito" Type="varchar" MaxLength="200" />
+    <Property Name="dt_inicio" Type="date" />
+    <Property Name="dt_fim" Type="date" />
+    <Property Name="co_status" Type="int" />
+    <Property Name="diretoria_sol" Type="varchar" MaxLength="50" />
+    <Property Name="dt_sol" Type="date" />
+    <Property Name="nu_tel_sol" Type="varchar" MaxLength="20" />
+    <Property Name="ddd_tel_sol" Type="varchar" MaxLength="5" />
+    <Property Name="nu_tel_sol2" Type="varchar" MaxLength="20" />
+    <Property Name="ddd_tel_sol2" Type="varchar" MaxLength="5" />
+    <Property Name="usuario_sol" Type="varchar" MaxLength="50" />
+    <Property Name="dt_imp" Type="date" />
+    <Property Name="dt_garantia" Type="date" />
+    <Property Name="co_email" Type="int" />
+    <Property Name="co_os_prospect_rel" Type="int" />
+  </EntityType>
+  <EntityType Name="cao_salario">
+    <Key>
+      <PropertyRef Name="co_usuario" />
+      <PropertyRef Name="dt_alteracao" />
+    </Key>
+    <Property Name="co_usuario" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="dt_alteracao" Type="date" Nullable="false" />
+    <Property Name="brut_salario" Type="float" Nullable="false" />
+    <Property Name="liq_salario" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="cao_sistema">
+    <Key>
+      <PropertyRef Name="co_sistema" />
+    </Key>
+    <Property Name="co_sistema" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="co_cliente" Type="uint" />
+    <Property Name="co_usuario" Type="varchar" MaxLength="50" />
+    <Property Name="co_arquitetura" Type="uint" />
+    <Property Name="no_sistema" Type="varchar" MaxLength="200" />
+    <Property Name="ds_sistema_resumo" Type="text" />
+    <Property Name="ds_caracteristica" Type="text" />
+    <Property Name="ds_requisito" Type="text" />
+    <Property Name="no_diretoria_solic" Type="varchar" MaxLength="100" />
+    <Property Name="ddd_telefone_solic" Type="varchar" MaxLength="5" />
+    <Property Name="nu_telefone_solic" Type="varchar" MaxLength="20" />
+    <Property Name="no_usuario_solic" Type="varchar" MaxLength="100" />
+    <Property Name="dt_solicitacao" Type="date" />
+    <Property Name="dt_entrega" Type="date" />
+    <Property Name="co_email" Type="int" />
+  </EntityType>
+  <EntityType Name="cao_usuario">
+    <Key>
+      <PropertyRef Name="co_usuario" />
+    </Key>
+    <Property Name="co_usuario" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="no_usuario" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="ds_senha" Type="varchar" MaxLength="14" Nullable="false" />
+    <Property Name="co_usuario_autorizacao" Type="varchar" MaxLength="20" />
+    <Property Name="nu_matricula" Type="ubigint" />
+    <Property Name="dt_nascimento" Type="date" />
+    <Property Name="dt_admissao_empresa" Type="date" />
+    <Property Name="dt_desligamento" Type="date" />
+    <Property Name="dt_inclusao" Type="datetime" Precision="0" />
+    <Property Name="dt_expiracao" Type="date" />
+    <Property Name="nu_cpf" Type="varchar" MaxLength="14" />
+    <Property Name="nu_rg" Type="varchar" MaxLength="20" />
+    <Property Name="no_orgao_emissor" Type="varchar" MaxLength="10" />
+    <Property Name="uf_orgao_emissor" Type="varchar" MaxLength="2" />
+    <Property Name="ds_endereco" Type="varchar" MaxLength="150" />
+    <Property Name="no_email" Type="varchar" MaxLength="100" />
+    <Property Name="no_email_pessoal" Type="varchar" MaxLength="100" />
+    <Property Name="nu_telefone" Type="varchar" MaxLength="64" />
+    <Property Name="dt_alteracao" Type="datetime" Precision="0" Nullable="false" />
+    <Property Name="url_foto" Type="varchar" MaxLength="255" />
+    <Property Name="instant_messenger" Type="varchar" MaxLength="80" />
+    <Property Name="icq" Type="uint" />
+    <Property Name="msn" Type="varchar" MaxLength="50" />
+    <Property Name="yms" Type="varchar" MaxLength="50" />
+    <Property Name="ds_comp_end" Type="varchar" MaxLength="50" />
+    <Property Name="ds_bairro" Type="varchar" MaxLength="30" />
+    <Property Name="nu_cep" Type="varchar" MaxLength="10" />
+    <Property Name="no_cidade" Type="varchar" MaxLength="50" />
+    <Property Name="uf_cidade" Type="varchar" MaxLength="2" />
+    <Property Name="dt_expedicao" Type="date" />
+  </EntityType>
+  <EntityType Name="permissao_sistema">
+    <Key>
+      <PropertyRef Name="co_usuario" />
+      <PropertyRef Name="co_tipo_usuario" />
+      <PropertyRef Name="co_sistema" />
+    </Key>
+    <Property Name="co_usuario" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="co_tipo_usuario" Type="ubigint" Nullable="false" />
+    <Property Name="co_sistema" Type="ubigint" Nullable="false" />
+    <Property Name="in_ativo" Type="char" MaxLength="1" Nullable="false" />
+    <Property Name="co_usuario_atualizacao" Type="varchar" MaxLength="20" />
+    <Property Name="dt_atualizacao" Type="datetime" Precision="0" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="agencedbModelStoreContainer">
+    <EntitySet Name="cao_fatura" EntityType="Self.cao_fatura" Schema="agencedb" store:Type="Tables" />
+    <EntitySet Name="cao_os" EntityType="Self.cao_os" Schema="agencedb" store:Type="Tables" />
+    <EntitySet Name="cao_salario" EntityType="Self.cao_salario" Schema="agencedb" store:Type="Tables" />
+    <EntitySet Name="cao_sistema" EntityType="Self.cao_sistema" Schema="agencedb" store:Type="Tables" />
+    <EntitySet Name="cao_usuario" EntityType="Self.cao_usuario" Schema="agencedb" store:Type="Tables" />
+    <EntitySet Name="permissao_sistema" EntityType="Self.permissao_sistema" Schema="agencedb" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

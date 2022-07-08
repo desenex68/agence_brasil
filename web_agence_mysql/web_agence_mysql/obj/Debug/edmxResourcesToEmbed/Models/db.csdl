@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="agencedbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="cao_fatura">
+    <Key>
+      <PropertyRef Name="co_fatura" />
+    </Key>
+    <Property Name="co_fatura" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="co_cliente" Type="Int32" Nullable="false" />
+    <Property Name="co_sistema" Type="Int32" Nullable="false" />
+    <Property Name="co_os" Type="Int32" Nullable="false" />
+    <Property Name="num_nf" Type="Int32" Nullable="false" />
+    <Property Name="total" Type="Single" Nullable="false" />
+    <Property Name="valor" Type="Single" Nullable="false" />
+    <Property Name="data_emissao" Type="DateTime" Nullable="false" />
+    <Property Name="corpo_nf" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="comissao_cn" Type="Single" Nullable="false" />
+    <Property Name="total_imp_inc" Type="Single" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="agencedbEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="cao_fatura" EntityType="Self.cao_fatura" />
+    <EntitySet Name="cao_os" EntityType="agencedbModel.cao_os" />
+    <EntitySet Name="cao_salario" EntityType="agencedbModel.cao_salario" />
+    <EntitySet Name="cao_sistema" EntityType="agencedbModel.cao_sistema" />
+    <EntitySet Name="cao_usuario" EntityType="agencedbModel.cao_usuario" />
+    <EntitySet Name="permissao_sistema" EntityType="agencedbModel.permissao_sistema" />
+  </EntityContainer>
+  <EntityType Name="cao_os">
+    <Key>
+      <PropertyRef Name="co_os" />
+    </Key>
+    <Property Name="co_os" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="nu_os" Type="Int32" />
+    <Property Name="co_sistema" Type="Int32" />
+    <Property Name="co_usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="co_arquitetura" Type="Int32" />
+    <Property Name="ds_os" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="ds_caracteristica" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="ds_requisito" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="dt_inicio" Type="DateTime" />
+    <Property Name="dt_fim" Type="DateTime" />
+    <Property Name="co_status" Type="Int32" />
+    <Property Name="diretoria_sol" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="dt_sol" Type="DateTime" />
+    <Property Name="nu_tel_sol" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ddd_tel_sol" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="nu_tel_sol2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="ddd_tel_sol2" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="usuario_sol" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="dt_imp" Type="DateTime" />
+    <Property Name="dt_garantia" Type="DateTime" />
+    <Property Name="co_email" Type="Int32" />
+    <Property Name="co_os_prospect_rel" Type="Int32" />
+  </EntityType>
+  <EntityType Name="cao_salario">
+    <Key>
+      <PropertyRef Name="co_usuario" />
+      <PropertyRef Name="dt_alteracao" />
+    </Key>
+    <Property Name="co_usuario" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="dt_alteracao" Type="DateTime" Nullable="false" />
+    <Property Name="brut_salario" Type="Single" Nullable="false" />
+    <Property Name="liq_salario" Type="Single" Nullable="false" />
+  </EntityType>
+  <EntityType Name="cao_sistema">
+    <Key>
+      <PropertyRef Name="co_sistema" />
+    </Key>
+    <Property Name="co_sistema" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="co_cliente" Type="Int64" />
+    <Property Name="co_usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="co_arquitetura" Type="Int64" />
+    <Property Name="no_sistema" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="ds_sistema_resumo" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="ds_caracteristica" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="ds_requisito" Type="String" MaxLength="65535" FixedLength="false" Unicode="false" />
+    <Property Name="no_diretoria_solic" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="ddd_telefone_solic" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="nu_telefone_solic" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="no_usuario_solic" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="dt_solicitacao" Type="DateTime" />
+    <Property Name="dt_entrega" Type="DateTime" />
+    <Property Name="co_email" Type="Int32" />
+  </EntityType>
+  <EntityType Name="cao_usuario">
+    <Key>
+      <PropertyRef Name="co_usuario" />
+    </Key>
+    <Property Name="co_usuario" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="no_usuario" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ds_senha" Type="String" Nullable="false" MaxLength="14" FixedLength="false" Unicode="false" />
+    <Property Name="co_usuario_autorizacao" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="nu_matricula" Type="Decimal" />
+    <Property Name="dt_nascimento" Type="DateTime" />
+    <Property Name="dt_admissao_empresa" Type="DateTime" />
+    <Property Name="dt_desligamento" Type="DateTime" />
+    <Property Name="dt_inclusao" Type="DateTime" />
+    <Property Name="dt_expiracao" Type="DateTime" />
+    <Property Name="nu_cpf" Type="String" MaxLength="14" FixedLength="false" Unicode="false" />
+    <Property Name="nu_rg" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="no_orgao_emissor" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="uf_orgao_emissor" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+    <Property Name="ds_endereco" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="no_email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="no_email_pessoal" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="nu_telefone" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+    <Property Name="dt_alteracao" Type="DateTime" Nullable="false" />
+    <Property Name="url_foto" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+    <Property Name="instant_messenger" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+    <Property Name="icq" Type="Int64" />
+    <Property Name="msn" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="yms" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ds_comp_end" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ds_bairro" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="nu_cep" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="no_cidade" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="uf_cidade" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+    <Property Name="dt_expedicao" Type="DateTime" />
+  </EntityType>
+  <EntityType Name="permissao_sistema">
+    <Key>
+      <PropertyRef Name="co_usuario" />
+      <PropertyRef Name="co_tipo_usuario" />
+      <PropertyRef Name="co_sistema" />
+    </Key>
+    <Property Name="co_usuario" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="co_tipo_usuario" Type="Decimal" Nullable="false" />
+    <Property Name="co_sistema" Type="Decimal" Nullable="false" />
+    <Property Name="in_ativo" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="co_usuario_atualizacao" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="dt_atualizacao" Type="DateTime" Nullable="false" />
+  </EntityType>
+</Schema>
