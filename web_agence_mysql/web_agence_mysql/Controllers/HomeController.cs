@@ -35,12 +35,22 @@ namespace web_agence_mysql.Controllers
             using (agencedbEntities dc = new agencedbEntities())
             {
                 var tipos_usuarios = new List<decimal> { 0, 1, 2 };
-                var respuesta = (from c in dc.cao_usuario.OrderBy(c => c.co_usuario)
+                //var respuesta = (from c in dc.cao_usuario.OrderBy(c => c.no_usuario)
+                //                 join p in dc.permissao_sistema on c.co_usuario equals p.co_usuario
+                //                 where p.co_sistema == 1
+                //                 && p.in_ativo == "S"
+                //                 && tipos_usuarios.Contains(p.co_tipo_usuario)
+                //                 select new {c.co_usuario, c.no_usuario }).ToList();
+
+
+                var respuesta = (from c in dc.cao_usuario
                                  join p in dc.permissao_sistema on c.co_usuario equals p.co_usuario
                                  where p.co_sistema == 1
                                  && p.in_ativo == "S"
                                  && tipos_usuarios.Contains(p.co_tipo_usuario)
-                                 select new {c.co_usuario, c.no_usuario }).ToList();
+                                 orderby c.no_usuario
+                                 select new { c.co_usuario, c.no_usuario }).ToList();
+
 
                 List<consultores> lista_consultores = new List<consultores>();
                 foreach(var item in respuesta)
@@ -49,9 +59,6 @@ namespace web_agence_mysql.Controllers
                 }
 
                 ViewBag.consultores = lista_consultores;
-
-
-
             }
 
             return View();

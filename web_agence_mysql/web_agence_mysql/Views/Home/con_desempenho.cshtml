@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "con_desempenho";
+    ViewBag.Title = "Agence Test";
 }
 
 <img src="~/Images/logo_agence.jpg" />
@@ -63,6 +63,55 @@
             left: 580px;
         }
 
+        #cover-spin {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: rgba(255,255,255,0.7);
+            z-index: 9999;
+            display: none;
+        }
+
+        @@-webkit-keyframes spin {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @@keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #cover-spin::after {
+            content: '';
+            display: block;
+            position: absolute;
+            left: 46%;
+            top: 40%;
+            width: 150px;
+            height: 150px;
+            border-style: solid;
+            border-color: black;
+            border-top-color: transparent;
+            border-width: 6px;
+            border-radius: 50%;
+            -webkit-animation: spin .8s linear infinite;
+            animation: spin .8s linear infinite;
+        }
+
     </style>
 
     <script type="text/javascript">
@@ -115,6 +164,7 @@
                     return false;
                 }
 
+                $('#cover-spin').show(0);
                 $.ajax({
                     url: '/Home/Cargar_Relatorio',
                     type: "POST",
@@ -130,14 +180,15 @@
                             $("input[name='chk_consultores']:checked").each(function () {
                                 co_usuario = $(this).val();
 
-                                var no_usuario = '';
+                                //var no_usuario = '';
+                                var no_usuario = $(this).parent().text();
                                 var total_receita_liquida = 0;
                                 var total_custo_fixo = 0;
                                 var total_comissao = 0;
                                 var total_lucro = 0
                                 $.each(lista_relatorio, function (index, item) {
                                     if (co_usuario == item.co_usuario) {
-                                        no_usuario = item.no_usuario
+                                        //no_usuario = item.no_usuario
                                         total_receita_liquida = item.total_receita_liquida;
                                         total_custo_fixo = item.total_custo_fixo;
                                         total_comissao = item.total_comissao;
@@ -197,6 +248,12 @@
 
                         }
                     },
+                    error: function (data) {
+                        $('#cover-spin').hide(0);
+                    },
+                    complete: function (data) {
+                        $('#cover-spin').hide(0);
+                    }
                 });
 
 
@@ -436,6 +493,8 @@
     <div id="pizza" style="display: none" class="container">
         <div class="pie" id="chartContainer1" style="width: 520px; height: 470px;float:left; border:1px solid #DDDDDD"></div>
     </div>
+
+    <div id="cover-spin"></div>
 
 </body>
 </html>
